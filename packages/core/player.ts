@@ -1,7 +1,3 @@
-// =========================
-// packages/core/player.ts
-// =========================
-
 export type Track = {
   id: string;
   title: string;
@@ -15,13 +11,25 @@ export class Player {
 
   constructor() {
     this.audio = new Audio();
+
+    // 自動で次の曲へ
+    this.audio.onended = () => {
+      this.next();
+    };
   }
 
+  // 🎧 audioエンジンに渡す用（超重要）
+  getAudioElement(): HTMLAudioElement {
+    return this.audio;
+  }
+
+  // 📜 プレイリスト読み込み
   loadPlaylist(tracks: Track[]) {
     this.playlist = tracks;
-    this.currentIndex = 0;
+    this.currentIndex = tracks.length > 0 ? 0 : -1;
   }
 
+  // ▶ 再生
   play(index?: number) {
     if (index !== undefined) {
       this.currentIndex = index;
@@ -30,14 +38,20 @@ export class Player {
     const track = this.playlist[this.currentIndex];
     if (!track) return;
 
-    this.audio.src = track.url;
+    // 同じ曲なら再セットしない（無駄防止）
+    if (this.audio.src !== track.url) {
+      this.audio.src = track.url;
+    }
+
     this.audio.play();
   }
 
+  // ⏸ 一時停止
   pause() {
     this.audio.pause();
   }
 
+  // 🔁 トグル
   toggle() {
     if (this.audio.paused) {
       this.audio.play();
@@ -46,6 +60,7 @@ export class Player {
     }
   }
 
+  // ⏭ 次
   next() {
     if (this.currentIndex < this.playlist.length - 1) {
       this.currentIndex++;
@@ -53,6 +68,7 @@ export class Player {
     }
   }
 
+  // ⏮ 前
   prev() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
@@ -60,64 +76,56 @@ export class Player {
     }
   }
 
+  // ⏩ シーク
   seek(time: number) {
     this.audio.currentTime = time;
   }
 
+  // 🔊 音量
   setVolume(volume: number) {
     this.audio.volume = Math.max(0, Math.min(1, volume));
   }
 
-  getCurrentTime() {
+  getVolume(): number {
+    return this.audio.volume;
+  }
+
+  // ⏱ 現在時間
+  getCurrentTime(): number {
     return this.audio.currentTime;
   }
 
-  getDuration() {
-    return this.audio.duration;
+  // ⏱ 長さ
+  getDuration(): number {
+    return this.audio.duration || 0;
   }
 
+  // 📡 イベント（UI用）
   onTimeUpdate(callback: (time: number) => void) {
     this.audio.ontimeupdate = () => {
       callback(this.audio.currentTime);
     };
   }
 
+  onPlay(callback: () => void) {
+    this.audio.onplay = callback;
+  }
+
+  onPause(callback: () => void) {
+    this.audio.onpause = callback;
+  }
+
   onEnded(callback: () => void) {
     this.audio.onended = callback;
   }
-}
 
-
-// =========================
-// packages/core/playlist.ts
-// =========================
-
-import { Track } from './player';
-
-export class PlaylistManager {
-  private tracks: Track[] = [];
-
-  add(track: Track) {
-    this.tracks.push(track);
+  // 🎵 現在の曲
+  getCurrentTrack(): Track | null {
+    return this.playlist[this.currentIndex] || null;
   }
 
-  remove(id: string) {
-    this.tracks = this.tracks.filter(t => t.id !== id);
-  }
-
-  getAll() {
-    return this.tracks;
-  }
-
-  clear() {
-    this.tracks = [];
+  // 📊 状態
+  isPlaying(): boolean {
+    return !this.audio.paused;
   }
 }
-
-
-// =========================
-// packages/core/index.ts
-// =========================
-
-export * from './player';
-export * from './playlist';
