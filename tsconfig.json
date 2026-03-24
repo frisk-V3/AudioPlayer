@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@my-player/core": ["packages/core/index.ts"],
+      "@my-player/audio": ["packages/audio/index.ts"],
+      "@my-player/ui": ["packages/ui/index.ts"],
+      "@my-player/types": ["packages/types/index.ts"]
+    },
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
