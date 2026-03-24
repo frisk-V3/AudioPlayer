@@ -1,8 +1,10 @@
-name: Build
+name: CI
 
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -18,10 +20,12 @@ jobs:
           node-version: 20
 
       - name: Install
-        run: npm install
+        run: npm install --workspaces
 
-      - name: Build Web
-        run: npm run dev:web
+      - name: Build
+        run: npm run build
 
-      - name: Build Desktop
-        run: npm run dev:desktop
+      # タグのときだけリリース
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
