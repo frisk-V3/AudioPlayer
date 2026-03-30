@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Audio_Player.MainWindow"
+        Title="Simple Audio Player" Width="400" Height="250"
+        WindowStartupLocation="CenterScreen"
+        DragDrop.AllowDrop="True">
+	<!-- ここをこの通りに書いてください -->
+
+	<StackPanel Margin="20" Spacing="15">
+		<TextBlock Text="Audio Player" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+
+		<Border Name="DropRegion" Background="#333" CornerRadius="8" Height="80"
+                BorderBrush="#555" BorderThickness="2">
+			<TextBlock Name="PathDisplay" Text="ここにファイルをドロップするか&#x0a;下のボタンで選択してください"
+                       Foreground="#AAA" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       TextAlignment="Center"/>
+		</Border>
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+			<Button Content="ファイル選択" Click="SelectFile_Click" Width="120"/>
+			<Button Content="再生" Click="PlayButton_Click" Width="80"/>
+		</StackPanel>
+	</StackPanel>
+</Window>
