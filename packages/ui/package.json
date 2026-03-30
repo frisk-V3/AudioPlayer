@@ -1,9 +1,0 @@
-{
-  "name": "@my-player/ui",
-  "version": "1.0.0",
-  "main": "index.ts",
-  "types": "index.ts",
-  "dependencies": {
-    "@my-player/core": "*"
-  }
-}
